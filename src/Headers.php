@@ -2,6 +2,8 @@
 
 namespace Virdiggg\HeaderCi3;
 
+defined('ENVIRONMENT') or define('ENVIRONMENT', 'production');
+
 class Headers
 {
     /**
@@ -131,22 +133,6 @@ class Headers
     {
         // Info about the web server. Removed because it could be used in simple attacks.
         header_remove("X-Powered-By");
-
-        // Set initial value
-        $this->setContentSecurityPolicy(Headers::CONTENT_SECURITY_POLICY);
-        $this->setCrossOriginOpenerPolicy(Headers::CROSS_ORIGIN_OPENER_POLICY);
-        $this->setCrossOriginResourcePolicy(Headers::CROSS_ORIGIN_RESOURCE_POLICY);
-        $this->setOriginAgentCluster(Headers::ORIGIN_AGENT_CLUSTER);
-        $this->setReferrerPolicy(Headers::REFERRER_POLICY);
-        $this->setStrictTransportSecurity(Headers::STRICT_TRANSPORT_SECURITY);
-        $this->setXContentTypeOptions(Headers::X_CONTENT_TYPE_OPTIONS);
-        $this->setXDNSPrefetchControl(Headers::X_DNS_PREFETCH_CONTROL);
-        $this->setXDownloadOptions(Headers::X_DOWNLOAD_OPTIONS);
-        $this->setXFrameOptions(Headers::X_FRAME_OPTIONS);
-        $this->setXPermittedCrossDomainPolicies(Headers::X_PERMITTED_CROSS_DOMAIN_POLICIES);
-        $this->setXXSSProtection(Headers::X_XSS_PROTECTION);
-
-        // $this->setHeaders();
     }
 
     /**
@@ -156,19 +142,67 @@ class Headers
      */
     public function setHeaders() {
         $headers = array_merge(
-            $this->ContentSecurityPolicy(),
-            $this->CrossOriginOpenerPolicy(),
-            $this->CrossOriginResourcePolicy(),
-            $this->OriginAgentCluster(),
-            $this->ReferrerPolicy(),
-            $this->XContentTypeOptions(),
-            $this->XDNSPrefetchControl(),
-            $this->XDownloadOptions(),
-            $this->XFrameOptions(),
-            $this->XPermittedCrossDomainPolicies(),
-            $this->XXSSProtection(),
+            $this->ContentSecurityPolicy(
+                empty($this->ContentSecurityPolicy) ?
+                (array) $this->setContentSecurityPolicy(Headers::CONTENT_SECURITY_POLICY) :
+                (array) $this->ContentSecurityPolicy
+            ),
+            $this->CrossOriginOpenerPolicy(
+                empty($this->CrossOriginOpenerPolicy) ?
+                $this->setCrossOriginOpenerPolicy(Headers::CROSS_ORIGIN_OPENER_POLICY) :
+                $this->CrossOriginOpenerPolicy
+            ),
+            $this->CrossOriginResourcePolicy(
+                empty($this->CrossOriginResourcePolicy) ?
+                $this->setCrossOriginResourcePolicy(Headers::CROSS_ORIGIN_RESOURCE_POLICY) :
+                $this->CrossOriginResourcePolicy
+            ),
+            $this->OriginAgentCluster(
+                empty($this->OriginAgentCluster) ?
+                $this->setOriginAgentCluster(Headers::ORIGIN_AGENT_CLUSTER) :
+                $this->OriginAgentCluster
+            ),
+            $this->ReferrerPolicy(
+                empty($this->ReferrerPolicy) ?
+                $this->setReferrerPolicy(Headers::REFERRER_POLICY) :
+                $this->ReferrerPolicy
+            ),
+            $this->XContentTypeOptions(
+                empty($this->XContentTypeOptions) ?
+                $this->setXContentTypeOptions(Headers::X_CONTENT_TYPE_OPTIONS) :
+                $this->XContentTypeOptions
+            ),
+            $this->XDNSPrefetchControl(
+                empty($this->XDNSPrefetchControl) ?
+                $this->setXDNSPrefetchControl(Headers::X_DNS_PREFETCH_CONTROL) :
+                $this->XDNSPrefetchControl
+            ),
+            $this->XDownloadOptions(
+                empty($this->XDownloadOptions) ?
+                $this->setXDownloadOptions(Headers::X_DOWNLOAD_OPTIONS) :
+                $this->XDownloadOptions
+            ),
+            $this->XFrameOptions(
+                empty($this->XFrameOptions) ?
+                $this->setXFrameOptions(Headers::X_FRAME_OPTIONS) :
+                $this->XFrameOptions
+            ),
+            $this->XPermittedCrossDomainPolicies(
+                empty($this->XPermittedCrossDomainPolicies) ?
+                $this->setXPermittedCrossDomainPolicies(Headers::X_PERMITTED_CROSS_DOMAIN_POLICIES) :
+                $this->XPermittedCrossDomainPolicies
+            ),
+            $this->XXSSProtection(
+                empty($this->XXSSProtection) ?
+                $this->setXXSSProtection(Headers::X_XSS_PROTECTION) :
+                $this->XXSSProtection
+            ),
             // Localhost is not https
-            $this->is_https() ? $this->StrictTransportSecurity() : []
+            ENVIRONMENT === 'production' ? $this->StrictTransportSecurity(
+                empty($this->StrictTransportSecurity) ?
+                $this->setStrictTransportSecurity(Headers::STRICT_TRANSPORT_SECURITY) :
+                $this->StrictTransportSecurity
+            ) : []
         );
 
         foreach ($headers as $key => $value) {
@@ -184,7 +218,7 @@ class Headers
      * @return array
      */
     private function ContentSecurityPolicy($param = []) {
-        return ['Content-Security-Policy: ' . join(';', array_unique(array_merge($this->ContentSecurityPolicy, $param)))];
+        return ['Content-Security-Policy: ' . join(';', array_unique((array) $param))];
     }
 
     /**
@@ -195,7 +229,7 @@ class Headers
      * @return void
      */
     public function setContentSecurityPolicy($param = Headers::CONTENT_SECURITY_POLICY) {
-        $this->ContentSecurityPolicy = $param;
+        $this->ContentSecurityPolicy = (array) $param;
     }
 
     /**
@@ -439,24 +473,4 @@ class Headers
     public function setXXSSProtection($param = Headers::X_XSS_PROTECTION) {
         $this->XXSSProtection = $param;
     }
-
-	/**
-	 * Is HTTPS?
-	 *
-	 * Determines if the application is accessed via an encrypted
-	 * (HTTPS) connection.
-	 *
-	 * @return bool
-	 */
-	private function is_https() {
-		if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
-			return TRUE;
-		} elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
-			return TRUE;
-		} elseif (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
-			return TRUE;
-		}
-
-		return FALSE;
-	}
 }

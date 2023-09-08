@@ -10,15 +10,23 @@ class App extends CI_Controller
 		parent::__construct();
 	}
 
-	public function test_secure_header()
+	public function testing1()
 	{
 		$this->headers = new Headers();
+        $this->headers->setHeaders();
+		return;
+	}
+
+	public function testing2()
+	{
+		$this->headers = new Headers();
+        $this->headers->setContentSecurityPolicy(["default-src 'self'"]);
 		$this->headers->setHeaders();
 		echo 1;
 		return;
 	}
 
-	public function test_secure_header_again()
+	public function testing3()
 	{
 		$this->headers = new Headers();
 		$this->headers->setXDNSPrefetchControl('on');
