@@ -13,14 +13,14 @@ class App extends CI_Controller
 	public function testing1()
 	{
 		$this->headers = new Headers();
-        $this->headers->setHeaders();
+		$this->headers->setHeaders();
 		return;
 	}
 
 	public function testing2()
 	{
 		$this->headers = new Headers();
-        $this->headers->setContentSecurityPolicy(["default-src 'self'"]);
+		$this->headers->setContentSecurityPolicy(["default-src 'self'"]);
 		$this->headers->setHeaders();
 		echo 1;
 		return;
@@ -36,6 +36,13 @@ class App extends CI_Controller
 	}
 
 	public function test_header()
+	{
+		$this->headers = new Headers();
+		echo 1;
+		return;
+	}
+
+	public function test_no_header()
 	{
 		echo 1;
 		return;

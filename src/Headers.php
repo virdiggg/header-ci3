@@ -144,8 +144,8 @@ class Headers
         $headers = array_merge(
             $this->ContentSecurityPolicy(
                 empty($this->ContentSecurityPolicy) ?
-                (array) $this->setContentSecurityPolicy(Headers::CONTENT_SECURITY_POLICY) :
-                (array) $this->ContentSecurityPolicy
+                $this->setContentSecurityPolicy(Headers::CONTENT_SECURITY_POLICY) :
+                $this->ContentSecurityPolicy
             ),
             $this->CrossOriginOpenerPolicy(
                 empty($this->CrossOriginOpenerPolicy) ?
@@ -218,7 +218,8 @@ class Headers
      * @return array
      */
     private function ContentSecurityPolicy($param = []) {
-        return ['Content-Security-Policy: ' . join(';', array_unique((array) $param))];
+        $param = empty($param) ? $this->ContentSecurityPolicy : $param;
+        return ['Content-Security-Policy: ' . join(';', array_unique($param))];
     }
 
     /**

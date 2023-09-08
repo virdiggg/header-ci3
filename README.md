@@ -26,14 +26,14 @@ class App extends CI_Controller
 	public function testing1()
 	{
 		$this->headers = new Headers();
-        $this->headers->setHeaders();
+		$this->headers->setHeaders();
 		return;
 	}
 
 	public function testing2()
 	{
 		$this->headers = new Headers();
-        $this->headers->setContentSecurityPolicy(["default-src 'self'"]);
+		$this->headers->setContentSecurityPolicy(["default-src 'self'"]);
 		$this->headers->setHeaders();
 		echo 1;
 		return;
@@ -50,6 +50,13 @@ class App extends CI_Controller
 
 	public function test_header()
 	{
+		$this->headers = new Headers();
+		echo 1;
+		return;
+	}
+
+	public function test_no_header()
+	{
 		echo 1;
 		return;
 	}
@@ -58,15 +65,80 @@ class App extends CI_Controller
 - Then CURL your website in cmd
 ```
 curl -I http://localhost/codeigniter/app/test_header/
+
+HTTP/1.1 200 OK
+Date: Fri, 08 Sep 2023 00:00:00 GMT
+Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+Content-Type: text/html; charset=UTF-8
+```
+```
+curl -I http://localhost/codeigniter/app/test_no_header/
+
+HTTP/1.1 200 OK
+Date: Fri, 08 Sep 2023 00:00:00 GMT
+Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+X-Powered-By: PHP/8.1.10
+Content-Type: text/html; charset=UTF-8
 ```
 ```
 curl -I http://localhost/codeigniter/app/testing1/
+
+HTTP/1.1 200 OK
+Date: Fri, 08 Sep 2023 00:00:00 GMT
+Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Type: text/html; charset=UTF-8
 ```
 ```
 curl -I http://localhost/codeigniter/app/testing2/
+
+HTTP/1.1 200 OK
+Date: Fri, 08 Sep 2023 00:00:00 GMT
+Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+Content-Security-Policy: default-src 'self'
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Type: text/html; charset=UTF-8
 ```
 ```
 curl -I http://localhost/codeigniter/app/testing3/
+
+HTTP/1.1 200 OK
+Date: Fri, 08 Sep 2023 00:00:00 GMT
+Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: on
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Type: text/html; charset=UTF-8
 ```
 
 ### EXPLANATIONS
