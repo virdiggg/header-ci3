@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-use Virdiggg\HeaderCi3;
+use Virdiggg\HeaderCi3\Headers;
 
 class App extends CI_Controller
 {
@@ -10,14 +10,24 @@ class App extends CI_Controller
 		parent::__construct();
 	}
 
-	private function test_secure_header()
+	public function test_secure_header()
 	{
 		$this->headers = new Headers();
+		$this->headers->setHeaders();
 		echo 1;
 		return;
 	}
 
-	private function test_header()
+	public function test_secure_header_again()
+	{
+		$this->headers = new Headers();
+		$this->headers->setXDNSPrefetchControl('on');
+		$this->headers->setHeaders();
+		echo 1;
+		return;
+	}
+
+	public function test_header()
 	{
 		echo 1;
 		return;

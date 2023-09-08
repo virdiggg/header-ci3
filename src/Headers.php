@@ -146,7 +146,7 @@ class Headers
         $this->setXPermittedCrossDomainPolicies(Headers::X_PERMITTED_CROSS_DOMAIN_POLICIES);
         $this->setXXSSProtection(Headers::X_XSS_PROTECTION);
 
-        $this->setHeaders();
+        // $this->setHeaders();
     }
 
     /**
