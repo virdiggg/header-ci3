@@ -148,7 +148,7 @@ Content-Type: text/html; charset=UTF-8
 $this->headers = new Headers();
 $this->headers->setHeaders();
 ```
-- This will modify `Content-Security-Policy` header, a powerful allow-list of what can happen on your page which mitigates many attacks. Parameter is an array.
+- This will modify `Content-Security-Policy` header, a powerful allow-list of what can happen on your page which mitigates many attacks. Be careful when using this as this can break your page if you're using 3rd party library such as FontAwesome. Parameter is an array.
 ```
 $this->headers = new Headers();
 $this->headers->setContentSecurityPolicy([array]);
@@ -179,7 +179,7 @@ $this->headers->setReferrerPolicy('string');
 $this->headers->setHeaders();
 ```
 - This will modify `Strict-Transport-Security` header, it tells browsers to prefer HTTPS. Parameter is a string.
-- Make sure whether if you have CONST ENVIRONMENT or not, if you are not, this will create it's own ENVIRONMENT.
+- Make sure whether you have CONST ENVIRONMENT or not, if you are not, this will create it's own ENVIRONMENT.
 - If ENVIRONMENT = 'production' (most likely not localhost), it will add this header. Otherwise, no.
 ```
 $this->headers = new Headers();
