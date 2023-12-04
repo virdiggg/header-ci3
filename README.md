@@ -86,9 +86,11 @@ curl -I http://localhost/codeigniter/app/testing1/
 HTTP/1.1 200 OK
 Date: Fri, 08 Sep 2023 00:00:00 GMT
 Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
-Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Content-Security-Policy: default-src 'self' base-uri 'self' font-src 'self' https: data: form-action 'self' frame-ancestors 'self' img-src 'self' data: object-src 'none' script-src 'self' script-src-attr 'none' style-src 'self' https: 'unsafe-inline' upgrade-insecure-requests
+'unsafe-inline' *.gstatic.com *.googleapis.com *.jquery.com *.jsdelivr.net
 Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Resource-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
 Origin-Agent-Cluster: ?1
 Referrer-Policy: no-referrer
 X-Content-Type-Options: nosniff
@@ -97,6 +99,7 @@ X-Download-Options: noopen
 X-Frame-Options: SAMEORIGIN
 X-Permitted-Cross-Domain-Policies: none
 X-XSS-Protection: 0
+Permissions-Policy: fullscreen=(self), geolocation=(self), camera=(self)
 Strict-Transport-Security: max-age=15552000; includeSubDomains
 Content-Type: text/html; charset=UTF-8
 ```
@@ -109,6 +112,7 @@ Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
 Content-Security-Policy: default-src 'self'
 Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Resource-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
 Origin-Agent-Cluster: ?1
 Referrer-Policy: no-referrer
 X-Content-Type-Options: nosniff
@@ -117,6 +121,7 @@ X-Download-Options: noopen
 X-Frame-Options: SAMEORIGIN
 X-Permitted-Cross-Domain-Policies: none
 X-XSS-Protection: 0
+Permissions-Policy: fullscreen=(self), geolocation=(self), camera=(self)
 Strict-Transport-Security: max-age=15552000; includeSubDomains
 Content-Type: text/html; charset=UTF-8
 ```
@@ -126,9 +131,11 @@ curl -I http://localhost/codeigniter/app/testing3/
 HTTP/1.1 200 OK
 Date: Fri, 08 Sep 2023 00:00:00 GMT
 Server: Apache/2.4.54 (Win64) OpenSSL/1.1.1q PHP/8.1.10
-Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Content-Security-Policy: default-src 'self' base-uri 'self' font-src 'self' https: data: form-action 'self' frame-ancestors 'self' img-src 'self' data: object-src 'none' script-src 'self' script-src-attr 'none' style-src 'self' https: 'unsafe-inline' upgrade-insecure-requests
+'unsafe-inline' *.gstatic.com *.googleapis.com *.jquery.com *.jsdelivr.net
 Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Resource-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
 Origin-Agent-Cluster: ?1
 Referrer-Policy: no-referrer
 X-Content-Type-Options: nosniff
@@ -137,6 +144,7 @@ X-Download-Options: noopen
 X-Frame-Options: SAMEORIGIN
 X-Permitted-Cross-Domain-Policies: none
 X-XSS-Protection: 0
+Permissions-Policy: fullscreen=(self), geolocation=(self), camera=(self)
 Strict-Transport-Security: max-age=15552000; includeSubDomains
 Content-Type: text/html; charset=UTF-8
 ```
@@ -161,6 +169,12 @@ $this->headers->setCrossOriginOpenerPolicy('string');
 $this->headers->setHeaders();
 ```
 - This will modify `Cross-Origin-Resource-Policy` header, it blocks others from loading your resources cross-origin. Parameter is a string.
+```
+$this->headers = new Headers();
+$this->headers->setCrossOriginResourcePolicy('string');
+$this->headers->setHeaders();
+```
+- This will modify `Cross-Origin-Embedder-Policy` header, it configures embedding cross-origin resources into the document. Parameter is a string.
 ```
 $this->headers = new Headers();
 $this->headers->setCrossOriginResourcePolicy('string');
@@ -220,5 +234,11 @@ $this->headers->setHeaders();
 ```
 $this->headers = new Headers();
 $this->headers->setXXSSProtection('string');
+$this->headers->setHeaders();
+```
+- This will modify `Permissions-Policy` header, it provides mechanisms for web developers to explicitly declare what functionality can and cannot be used on a website. Parameter is a string.
+```
+$this->headers = new Headers();
+$this->headers->setPermissionPolicy('string');
 $this->headers->setHeaders();
 ```

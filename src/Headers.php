@@ -22,7 +22,12 @@ class Headers
         "script-src 'self'",
         "script-src-attr 'none'",
         "style-src 'self' https: 'unsafe-inline'",
-        "upgrade-insecure-requests"
+        "upgrade-insecure-requests",
+        "unsafe-inline",
+        "*.gstatic.com",
+        "*.googleapis.com",
+        "*.cloudflare.com",
+        "*.jsdelivr.net"
     ];
 
     private $ContentSecurityPolicy = [];
@@ -44,6 +49,15 @@ class Headers
     const CROSS_ORIGIN_RESOURCE_POLICY = 'same-origin';
 
     private $CrossOriginResourcePolicy;
+
+    /**
+     * Configures embedding cross-origin resources into the documen
+     * 
+     * @return string
+     */
+    const CROSS_ORIGIN_EMBEDDER_POLICY = 'same-origin';
+
+    private $CrossOriginEmbedderPolicy;
 
     /**
      * Changes process isolation to be origin-based
@@ -129,6 +143,19 @@ class Headers
 
     private $XXSSProtection;
 
+    /**
+     * Provides mechanisms for web developers to explicitly declare what functionality can and cannot be used on a website
+     * 
+     * @return array
+     */
+    const PERMISSION_POLICY = [
+        "fullscreen=(self)",
+        "geolocation=(self)",
+        "camera=(self)"
+    ];
+
+    private $PermissionPolicy;
+
     public function __construct()
     {
         // Info about the web server. Removed because it could be used in simple attacks.
@@ -156,6 +183,11 @@ class Headers
                 empty($this->CrossOriginResourcePolicy) ?
                 $this->setCrossOriginResourcePolicy(Headers::CROSS_ORIGIN_RESOURCE_POLICY) :
                 $this->CrossOriginResourcePolicy
+            ),
+            $this->CrossOriginEmbedderPolicy(
+                empty($this->CrossOriginEmbedderPolicy) ?
+                $this->setCrossOriginEmbedderPolicy(Headers::CROSS_ORIGIN_EMBEDDER_POLICY) :
+                $this->CrossOriginEmbedderPolicy
             ),
             $this->OriginAgentCluster(
                 empty($this->OriginAgentCluster) ?
@@ -197,6 +229,11 @@ class Headers
                 $this->setXXSSProtection(Headers::X_XSS_PROTECTION) :
                 $this->XXSSProtection
             ),
+            $this->PermissionPolicy(
+                empty($this->PermissionPolicy) ?
+                $this->setPermissionPolicy(Headers::PERMISSION_POLICY) :
+                $this->PermissionPolicy
+            ),
             // Localhost is not https
             ENVIRONMENT === 'production' ? $this->StrictTransportSecurity(
                 empty($this->StrictTransportSecurity) ?
@@ -219,7 +256,7 @@ class Headers
      */
     private function ContentSecurityPolicy($param = []) {
         $param = empty($param) ? $this->ContentSecurityPolicy : $param;
-        return ['Content-Security-Policy: ' . join(';', array_unique($param))];
+        return ['Content-Security-Policy: ' . join(' ', array_values(array_unique($param)))];
     }
 
     /**
@@ -275,6 +312,28 @@ class Headers
      */
     public function setCrossOriginResourcePolicy($param = Headers::CROSS_ORIGIN_RESOURCE_POLICY) {
         $this->CrossOriginResourcePolicy = $param;
+    }
+
+    /**
+     * HTTP Header Cross-Origin-Embedder-Policy
+     * 
+     * @param string $param
+     * 
+     * @return array
+     */
+    private function CrossOriginEmbedderPolicy($param = '') {
+        return ['Cross-Origin-Embedder-Policy: ' . (empty($param) ? $this->CrossOriginEmbedderPolicy : $param)];
+    }
+
+    /**
+     * HTTP Header Cross-Origin-Embedder-Policy
+     * 
+     * @param string $param
+     * 
+     * @return void
+     */
+    public function setCrossOriginEmbedderPolicy($param = Headers::CROSS_ORIGIN_EMBEDDER_POLICY) {
+        $this->CrossOriginEmbedderPolicy = $param;
     }
 
     /**
@@ -473,5 +532,28 @@ class Headers
      */
     public function setXXSSProtection($param = Headers::X_XSS_PROTECTION) {
         $this->XXSSProtection = $param;
+    }
+
+    /**
+     * HTTP Header Permissions-Policy
+     * 
+     * @param array $param
+     * 
+     * @return array
+     */
+    private function PermissionPolicy($param = []) {
+        $param = empty($param) ? $this->ContentSecurityPolicy : $param;
+        return ['Permissions-Policy: ' . join(', ', array_values(array_unique($param)))];
+    }
+
+    /**
+     * Set HTTP Header Permissions-Policy
+     * 
+     * @param array $param
+     * 
+     * @return void
+     */
+    public function setPermissionPolicy($param = Headers::PERMISSION_POLICY) {
+        $this->PermissionPolicy = (array) $param;
     }
 }
